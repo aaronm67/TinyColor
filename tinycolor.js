@@ -13,12 +13,15 @@ var trimLeft = /^[\s,#]+/,
     parseFloat = window.parseFloat;
 
 function tinycolor (color, opts) {
-    
-    // If input is already a tinycolor, return itself
-    if (typeof color == "object" && color.hasOwnProperty("_tc_id")) {
-       return color;
+    if (!(this instanceof arguments.callee)) {
+        return new tinycolor(color, opts);
     }
-    
+
+    // If input is already a tinycolor, return itself
+    if (color instanceof arguments.callee) {
+        return color;
+    }
+
     var rgb = inputToRGB(color);
     var r = rgb.r,
         g = rgb.g,
@@ -35,7 +38,7 @@ function tinycolor (color, opts) {
     if (g < 1) { g = mathRound(g); }
     if (b < 1) { b = mathRound(b); }
     
-    return {
+    return extend(this, {
         ok: rgb.ok,
         format: format,
         _tc_id: tinyCounter++,
@@ -106,7 +109,7 @@ function tinycolor (color, opts) {
             
             return formattedString || this.toHexString();
         }
-    };
+    });
 }
 
 // If input is an object, force 1 into "1.0" to handle ratios properly
@@ -694,6 +697,16 @@ function convertToPercentage(n) {
     }
     
     return n;
+}
+
+function extend(dest, source) {
+    for (var property in source) {
+        if (source.hasOwnProperty(property)) {
+            dest[property] = source[property];
+        }
+    }
+
+    return dest;
 }
 
 var matchers = (function() {
