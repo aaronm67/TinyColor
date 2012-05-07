@@ -37,8 +37,8 @@ function tinycolor (color, opts) {
     if (r < 1) { r = mathRound(r); }
     if (g < 1) { g = mathRound(g); }
     if (b < 1) { b = mathRound(b); }
-    
-    return extend(this, {
+
+    extend(this, {
         ok: rgb.ok,
         format: format,
         _tc_id: tinyCounter++,
